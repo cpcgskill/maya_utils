@@ -136,7 +136,7 @@ class SimpleOutputException(Exception): pass
 
 
 # 简单输出的异常类列表， 输出格式为'{异常类型}: {异常信息}'
-global_ex_types = [SimpleOutputException]
+simple_output_ex_types = [SimpleOutputException]
 
 
 def exception_responder(fn):
@@ -151,7 +151,7 @@ def exception_responder(fn):
             return fn(*args, **kwargs)
         except:
             ex_type, ex_value, ex_traceback = sys.exc_info()
-            for et in global_ex_types:
+            for et in simple_output_ex_types:
                 if isinstance(ex_value, et):
                     exception_output_handle("{}: {}".format(et.__name__, ex_value))
                     return
