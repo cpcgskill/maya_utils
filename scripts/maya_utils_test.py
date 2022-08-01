@@ -19,7 +19,7 @@ except:
 from maya_utils import *
 
 
-@call_block
+@exception_responder
 def test():
     if True:
         if True:

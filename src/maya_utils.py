@@ -18,6 +18,10 @@ import sys
 
 import maya.cmds as mc
 from maya.api.OpenMaya import MGlobal
+from maya.utils import executeDeferred as _executeDeferred
+
+_bytes_t = type(b'')
+_unicode_t = type('')
 
 
 def undo_block(fn):
@@ -39,38 +43,24 @@ def decode_string(s):
     :param s:
     :return:
     """
-    if sys.version_info.major == 2:
-        if isinstance(s, str):
+    if isinstance(s, _unicode_t):
+        return s
+    elif isinstance(s, _bytes_t):
+        try:
+            return s.decode("utf-8")
+        except UnicodeDecodeError:
             try:
-                return s.decode("UTF-8")
+                return s.decode("GB18030")
             except UnicodeDecodeError:
                 try:
-                    return s.decode("GB18030")
+                    return s.decode("Shift-JIS")
                 except UnicodeDecodeError:
                     try:
-                        return s.decode("Shift-JIS")
+                        return s.decode("EUC-KR")
                     except UnicodeDecodeError:
-                        try:
-                            return s.decode("EUC-KR")
-                        except UnicodeDecodeError:
-                            return unicode(s)
-        return s
+                        return _unicode_t(s)
     else:
-        if isinstance(s, bytes):
-            try:
-                return s.decode("UTF-8")
-            except UnicodeDecodeError:
-                try:
-                    return s.decode("GB18030")
-                except UnicodeDecodeError:
-                    try:
-                        return s.decode("Shift-JIS")
-                    except UnicodeDecodeError:
-                        try:
-                            return s.decode("EUC-KR")
-                        except UnicodeDecodeError:
-                            return str(s)
-        return s
+        raise TypeError
 
 
 def format_exception(ex_type, ex_value, ex_traceback):
@@ -162,5 +152,12 @@ def exception_responder(fn):
     return _
 
 
+def execute_deferred(fn):
+    @functools.wraps(fn)
+    def _(*args, **kwargs):
+        return _executeDeferred(lambda: fn(*args, **kwargs))
+    return _
+
+
 def call_block(fn):
-    return functools.wraps(fn)(undo_block(exception_responder(fn)))
+    return functools.wraps(fn)(execute_deferred(undo_block(exception_responder(fn))))
