@@ -152,9 +152,9 @@ def exception_responder(fn):
 
 
 def execute_deferred(fn):
-    from maya.utils import executeDeferred as _executeDeferred
     @functools.wraps(fn)
     def _(*args, **kwargs):
+        from maya.utils import executeDeferred as _executeDeferred
         return _executeDeferred(lambda: fn(*args, **kwargs))
 
     return _
