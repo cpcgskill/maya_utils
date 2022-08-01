@@ -18,7 +18,6 @@ import sys
 
 import maya.cmds as mc
 from maya.api.OpenMaya import MGlobal
-from maya.utils import executeDeferred as _executeDeferred
 
 _bytes_t = type(b'')
 _unicode_t = type('')
@@ -153,11 +152,13 @@ def exception_responder(fn):
 
 
 def execute_deferred(fn):
+    from maya.utils import executeDeferred as _executeDeferred
     @functools.wraps(fn)
     def _(*args, **kwargs):
         return _executeDeferred(lambda: fn(*args, **kwargs))
+
     return _
 
 
 def call_block(fn):
-    return functools.wraps(fn)(execute_deferred(undo_block(exception_responder(fn))))
+    return functools.wraps(fn)(undo_block(exception_responder(fn)))
