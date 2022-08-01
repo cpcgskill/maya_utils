@@ -17,7 +17,8 @@ import os
 import sys
 
 import maya.cmds as mc
-from maya.api.OpenMaya import MGlobal
+from maya.OpenMaya import MGlobal as MGlobal_api1
+from maya.api.OpenMaya import MGlobal as MGlobal_api2
 
 _bytes_t = type(b'')
 _unicode_t = type('')
@@ -117,7 +118,7 @@ def format_exception(ex_type, ex_value, ex_traceback):
 # 异常输出格式化头
 format_exception_handle = format_exception
 # 异常输出头
-exception_output_handle = MGlobal.displayError
+exception_output_handle = MGlobal_api2.displayError
 
 
 # 基础自动异常输出异常类
@@ -155,8 +156,10 @@ def execute_deferred(fn):
     @functools.wraps(fn)
     def _(*args, **kwargs):
         from maya.utils import executeDeferred as _executeDeferred
-        return _executeDeferred(lambda: fn(*args, **kwargs))
-
+        if MGlobal_api1.mayaState() == MGlobal_api1.kInteractive:
+            _executeDeferred(fn, *args, **kwargs)
+        else:
+            fn(*args, **kwargs)
     return _
 
 
