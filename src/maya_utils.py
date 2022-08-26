@@ -63,6 +63,10 @@ def decode_string(s):
         raise TypeError
 
 
+def get_user_application_directory():
+    return os.path.abspath(mc.internalVar(uad=True))
+
+
 def format_exception(ex_type, ex_value, ex_traceback):
     # 分割线
     fgx = "#" * 126 + "\n"
@@ -160,6 +164,7 @@ def execute_deferred(fn):
             _executeDeferred(fn, *args, **kwargs)
         else:
             fn(*args, **kwargs)
+
     return _
 
 
