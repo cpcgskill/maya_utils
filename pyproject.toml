@@ -1,0 +1,38 @@
+[build-system]
+requires = [
+    "setuptools>=24",
+    "wheel"
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "maya_utils"
+version = "0.2.1"
+description = "Maya 工具包"
+readme = "README.md"
+authors = [
+    { name = "cpcgskill", email = "cpcgskill@outlook.com" }
+]
+license = { text = "Apache Software License (Apache 2.0)" }
+requires-python = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*"
+classifiers = [
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 2",
+    "Programming Language :: Python :: 2.7",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: Implementation :: CPython",
+]
+
+[project.urls]
+Homepage = "https://github.com/cpcgskill/maya_utils"
+"Bug Tracker" = "https://github.com/cpcgskill/maya_utils/issues"
+
+[tool.setuptools]
+py-modules = ["maya_utils"]
+package-dir = {"" = "src"}
